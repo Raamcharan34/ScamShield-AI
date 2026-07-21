@@ -30,7 +30,7 @@ export async function POST(request: Request) {
         },
       });
     }
-console.log("API KEY EXISTS:", !!process.env.OPENROUTER_API_KEY);
+console.log("API KEY:", process.env.OPENROUTER_API_KEY?.substring(0, 15));
     const response = await fetch(
       "https://openrouter.ai/api/v1/chat/completions",
       {
@@ -94,12 +94,12 @@ Safe or Scam
     const data = await response.json();
 
     if (!response.ok) {
-      console.log(data);
+  console.log("OPENROUTER ERROR:", data);
 
-      return Response.json({
-        result: data.error?.message || "OpenRouter Error",
-      });
-    }
+  return Response.json({
+    result: JSON.stringify(data, null, 2),
+  });
+}
 
     return Response.json({
       result:
