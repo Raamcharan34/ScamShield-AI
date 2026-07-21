@@ -30,7 +30,7 @@ export async function POST(request: Request) {
         },
       });
     }
-
+console.log("API KEY EXISTS:", !!process.env.OPENROUTER_API_KEY);
     const response = await fetch(
       "https://openrouter.ai/api/v1/chat/completions",
       {
