@@ -35,6 +35,10 @@ console.log({
   length: process.env.OPENROUTER_API_KEY?.length,
   first15: process.env.OPENROUTER_API_KEY?.substring(0, 15),
 });
+console.log("===== ENV DEBUG =====");
+console.log(process.env.OPENROUTER_API_KEY);
+console.log("===== END =====");
+
     const response = await fetch(
       "https://openrouter.ai/api/v1/chat/completions",
       {
