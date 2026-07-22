@@ -8,7 +8,13 @@ export async function POST(req: Request) {
   try {
     const { message, image } = await req.json();
 
-    const parts: any[] = [];
+    const parts: Array<{
+      text?: string;
+      inlineData?: {
+        mimeType: string;
+        data: string;
+      };
+    }> = [];
 
     let prompt = `
 You are ScamShield AI.
@@ -35,7 +41,10 @@ Safe or Scam
 `;
 
     if (message && message.trim() !== "") {
-      prompt += `\n\nText:\n${message}`;
+      prompt += `
+
+Text:
+${message}`;
     }
 
     parts.push({
@@ -64,11 +73,14 @@ Safe or Scam
     return Response.json({
       result: response.text,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(error);
 
     return Response.json({
-      result: error.message,
+      result:
+        error instanceof Error
+          ? error.message
+          : "Unknown error occurred.",
     });
   }
 }
