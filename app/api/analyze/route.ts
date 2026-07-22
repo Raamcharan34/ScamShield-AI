@@ -1,7 +1,7 @@
-import { GoogleGenAI } from "@google/genai";
+import Groq from "groq-sdk";
 
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY!,
+const ai = new Groq({
+  apiKey: process.env.GROQ_API_KEY!,
 });
 
 export async function POST(req: Request) {
@@ -122,18 +122,34 @@ ${message}`;
       });
     }
 
-    const response = await ai.models.generateContent({
- model: "gemini-3.6-flash",
-      contents: [
-        {
-          role: "user",
-          parts,
-        },
+  const response = await ai.chat.completions.create({
+  model: "llama-3.3-70b-versatile",
+  messages: [
+    {
+      role: "user",
+      content: [
+        ...parts.map((part) => {
+          if (part.text) {
+            return {
+              type: "text" as const,
+              text: part.text,
+            };
+          }
+
+          return {
+            type: "image_url" as const,
+            image_url: {
+              url: `data:${part.inlineData!.mimeType};base64,${part.inlineData!.data}`,
+            },
+          };
+        }),
       ],
-    });
+    },
+  ],
+});
 
     return Response.json({
-      result: response.text,
+      result: response.choices[0]?.message?.content ?? "No response",
     });
   } catch (error: unknown) {
     console.error(error);
