@@ -79,13 +79,18 @@ setUrls(foundUrls);
   }
 
   const verdict =
-    risk >= 80
-      ? "🚨 SCAM"
-      : risk >= 50
-      ? "⚠️ SUSPICIOUS"
-      : result
-      ? "✅ SAFE"
-      : "";
+  result.includes("Error") ||
+  result.includes("404") ||
+  result.includes("Unknown") ||
+  result.includes("model")
+    ? "❌ ERROR"
+    : risk >= 80
+    ? "🚨 SCAM"
+    : risk >= 50
+    ? "⚠️ SUSPICIOUS"
+    : result
+    ? "✅ SAFE"
+    : "";
 
   const verdictColor =
     risk >= 80
