@@ -79,17 +79,16 @@ setUrls(foundUrls);
   }
 
   const verdict =
-  result.includes("Error") ||
-  result.includes("404") ||
-  result.includes("Unknown") ||
-  result.includes("model")
-    ? "❌ ERROR"
-    : risk >= 80
+  risk >= 80
     ? "🚨 SCAM"
     : risk >= 50
     ? "⚠️ SUSPICIOUS"
-    : result
+    : risk > 0
     ? "✅ SAFE"
+    : result.includes('"error"') ||
+      result.includes("NOT_FOUND") ||
+      result.includes("404")
+    ? "❌ ERROR"
     : "";
 
   const verdictColor =
